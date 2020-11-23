@@ -2,36 +2,31 @@ pragma solidity ^0.7.5;
 
 contract myContract {
 
-    uint256 public peopleCount = 0;
-    uint256 openingTime = 1544669573;
-    address owner;
+    mapping (address => uint256) public balances; 
+    address payable wallet;
 
-    modifier onlyWhileOpen () {
-	require (block.timestamp >= openingTime); 
-	_;
+    event Purchase (
+	address indexed _buyer,
+	uint256 _amount
+    );
+
+    constructor (address payable _wallet) public {
+	wallet = _wallet; 
     }
 
-    mapping (uint => Person) public people;
+    function external payable () {
+	buyToken();
+    }
 
-    struct Person {
+    function buyToken () public payable {
+
+    // buy a token
+    // send eth to wallet address
+
+	balances[msg.sender] += 1;
+	wallet.transfer (msg.value);
+	emit Purchase (msg.sender, 1);
     
-	uint _id;
-	string _firstname;
-	string _lastname;
-    
-    }
-
-    constructor () public {
-	owner = msg.sender; 
-    }
-
-    function addPerson (string memory _firstname, string memory _lastname) public onlyWhileOpen {
-	incrementCount();
-	people[peopleCount] = Person(peopleCount, _firstname , _lastname);
-    }
-
-    function incrementCount () internal {
-	peopleCount += 1;
     }
 
 }
