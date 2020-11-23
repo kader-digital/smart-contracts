@@ -6,16 +6,13 @@ contract ERC20Token {
     mapping (address => uint256) public balances;
 
     function mint () public {
-    
-	balances[msg.sender]++;
-    
+	balances[tx.origin]++;
     }
 
 }
 
 contract myContract {
 
-    
     address payable wallet;
     address public token;
 
@@ -30,10 +27,8 @@ contract myContract {
 
     function buyToken () public payable {
 
-	ERC20Token _token = ERC20Token (address(token));
+	ERC20Token (address(token)).mint();
 	wallet.transfer (msg.value);
-	emit Purchase (msg.sender, 1);
-    
     }
 
 }
